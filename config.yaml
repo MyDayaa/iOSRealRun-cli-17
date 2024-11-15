@@ -1,4 +1,4 @@
-v: 3.3
-routeConfig: "HNroute.txt"
+v: 4.8
+routeConfig: "YQroute.txt"
 libimobiledeviceDir: "libimobiledevice"
 imageDir: "DeveloperDiskImage"
