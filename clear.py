@@ -1,6 +1,5 @@
 import signal
 import logging
-from time import sleep
 import coloredlogs
 import os
 
@@ -12,6 +11,7 @@ from pymobiledevice3.cli.developer import DvtSecureSocketProxyService
 from init import init
 from init import tunnel
 from init import route
+from time import sleep
 
 import run
 
@@ -44,7 +44,7 @@ def main():
         logger.setLevel(logging.DEBUG)
         coloredlogs.install(level=logging.DEBUG)
 
-    init.init()
+    # init.init()
     logger.info("init done")
 
     # start the tunnel in another process
@@ -56,23 +56,25 @@ def main():
     try:
         logger.debug(f"tunnel address: {address}, port: {port}")
 
-        # get route
-        loc = route.get_route()
-        logger.info(f"got route from {config.config.routeConfig}")
-
-
+        
         with RemoteServiceDiscoveryService((address, port)) as rsd:
+            init.init(rsd.lockdown)
             with DvtSecureSocketProxyService(rsd) as dvt:
                 try:
-                    # print(f"已开始模拟跑步，速度大约为 {config.config.v} m/s")
-                    print("无限clear中，按 Ctrl+C 退出")
-                    # print("请勿直接关闭窗口，否则无法还原正常定位")
+                    print(f"已开始循环清理设备位置信息")
                     while True:
                         location.clear_location(dvt)
-                        sleep(1)
+                        sleep(0.5)
+
                 except KeyboardInterrupt:
                     logger.debug("get KeyboardInterrupt (inner)")
                     logger.debug(f"Is process alive? {process.is_alive()}")
+                finally:
+                    logger.debug(f"Is process alive? {process.is_alive()}")
+                    logger.debug("Start to clear location")
+                    location.clear_location(dvt)
+                    logger.info("Location cleared")
+
 
     except KeyboardInterrupt:
         logger.debug("get KeyboardInterrupt (outer)")
