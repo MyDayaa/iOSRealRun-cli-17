@@ -1,4 +1,4 @@
-v: 4.8
+v: 5
 routeConfig: "YQroute.txt"
 libimobiledeviceDir: "libimobiledevice"
 imageDir: "DeveloperDiskImage"
